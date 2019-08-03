@@ -9,8 +9,8 @@
 	<!--contextConfigLocation-->
 
 	<servlet>
-		<servlet-name>gupaomvc</servlet-name>
-		<servlet-class>com.gupaoedu.vip.spring.formework.webmvc.servlet.GPDispatcherServlet</servlet-class>
+		<servlet-name>gaofengMVC</servlet-name>
+		<servlet-class>com.gaofeng.spring.formework.webmvc.servlet.GFDispatcherServlet</servlet-class>
 		<init-param>
 			<param-name>contextConfigLocation</param-name>
 			<param-value>classpath:application.properties</param-value>
@@ -19,7 +19,7 @@
 	</servlet>
 
 	<servlet-mapping>
-		<servlet-name>gupaomvc</servlet-name>
+		<servlet-name>gaofengMVC</servlet-name>
 		<url-pattern>/*</url-pattern>
 	</servlet-mapping>
 

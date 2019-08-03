@@ -14,6 +14,7 @@ import com.gaofeng.spring.formework.core.GFBeanFactory;
 import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class GFApplicationContext extends GFDefaultListableBeanFactory implements GFBeanFactory {
@@ -113,7 +114,7 @@ public class GFApplicationContext extends GFDefaultListableBeanFactory implement
             //如果存在获取注解上的值
             GFAutowired autowired =  field.getAnnotation(GFAutowired.class);
             String autowiredBeanName =  autowired.value().trim();
-            if(autowiredBeanName == ""){
+            if("".equals(autowiredBeanName)){
                 //如果值不存在那么通过类型进行获取
                 autowiredBeanName = field.getType().getName();
             }
@@ -122,7 +123,7 @@ public class GFApplicationContext extends GFDefaultListableBeanFactory implement
             if(this.factoryBeanInstanceCache.get(autowiredBeanName) == null){ continue; }
             try {
                 //通过反射进行赋值
-                field.set(instance,factoryBeanInstanceCache.get(autowiredBeanName).getWrappedInstance());
+                field.set(instance,this.factoryBeanInstanceCache.get(autowiredBeanName).getWrappedInstance());
             } catch (IllegalAccessException e) {
                 e.printStackTrace();
             }
@@ -172,5 +173,14 @@ public class GFApplicationContext extends GFDefaultListableBeanFactory implement
      */
     private GFAdvisedSupport instantionAopConfig(GFBeanDefinition gpBeanDefinition){
         return null;
+    }
+
+    //将伪IOC容器中得配置信息的key取出来
+    public String[] getBeanDefinitionNames(){
+       return this.beanDefinitionMap.keySet().toArray(new String[this.beanDefinitionMap.size()]);
+    }
+
+    public Properties getconfig(){
+        return reader.getConfig();
     }
 }
