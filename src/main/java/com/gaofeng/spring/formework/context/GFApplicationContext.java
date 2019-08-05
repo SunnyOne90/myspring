@@ -3,6 +3,10 @@ package com.gaofeng.spring.formework.context;
 import com.gaofeng.spring.formework.annotation.GFAutowired;
 import com.gaofeng.spring.formework.annotation.GFController;
 import com.gaofeng.spring.formework.annotation.GFService;
+import com.gaofeng.spring.formework.aop.GFAopProxy;
+import com.gaofeng.spring.formework.aop.GFCglibAopProxy;
+import com.gaofeng.spring.formework.aop.GFJdkDynamicAopProxy;
+import com.gaofeng.spring.formework.aop.config.GFAopConfig;
 import com.gaofeng.spring.formework.aop.support.GFAdvisedSupport;
 import com.gaofeng.spring.formework.beans.GFBeanWrapper;
 import com.gaofeng.spring.formework.beans.config.GFBeanDefinition;
@@ -147,18 +151,29 @@ public class GFApplicationContext extends GFDefaultListableBeanFactory implement
             }else{
                 Class<?> clazz = Class.forName(className);
                 instance = clazz.newInstance();
-                // TODO: 2019/8/3 加入AOP逻辑
-                GFAdvisedSupport advisedSupport = new GFAdvisedSupport();
-
+                GFAdvisedSupport config =  instantionAopConfig(beanDefinition);
+                config.setTarget(instance);
+                config.setTargetClass(clazz);
+                //符合PointCut的规则的话，闯将代理对象
+                if(config.pointCutMatch()) {
+                    instance = createProxy(config).getProxy();
+                }
                 this.factoryBeanObjectCache.put(className,instance);
                 this.factoryBeanObjectCache.put(beanDefinition.getFactoryBeanName(),instance);
             }
-
         }catch (Exception e){
             e.printStackTrace();
         }
         return instance;
 
+    }
+    private GFAopProxy createProxy(GFAdvisedSupport config) {
+
+        Class targetClass = config.getTargetClass();
+        if(targetClass.getInterfaces().length > 0){
+            return new GFJdkDynamicAopProxy(config);
+        }
+        return new GFCglibAopProxy(config);
     }
 
     @Override
@@ -172,7 +187,14 @@ public class GFApplicationContext extends GFDefaultListableBeanFactory implement
      * @return
      */
     private GFAdvisedSupport instantionAopConfig(GFBeanDefinition gpBeanDefinition){
-        return null;
+        GFAopConfig config = new GFAopConfig();
+        config.setPointCut(this.reader.getConfig().getProperty("pointCut"));
+        config.setAspectClass(this.reader.getConfig().getProperty("aspectClass"));
+        config.setAspectBefore(this.reader.getConfig().getProperty("aspectBefore"));
+        config.setAspectAfter(this.reader.getConfig().getProperty("aspectAfter"));
+        config.setAspectAfterThrow(this.reader.getConfig().getProperty("aspectAfterThrow"));
+        config.setAspectAfterThrowingName(this.reader.getConfig().getProperty("aspectAfterThrowingName"));
+        return new GFAdvisedSupport(config);
     }
 
     //将伪IOC容器中得配置信息的key取出来

@@ -1,6 +1,7 @@
 package com.gaofeng.spring.formework.webmvc.servlet;
 
 import com.gaofeng.spring.formework.annotation.GFRequestParam;
+import com.sun.org.apache.regexp.internal.RE;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -61,21 +62,16 @@ public class GFHandlerAdapter {
             int index = paramIndexMapping.get(HttpServletResponse.class.getName());
             paramValues[index] = resp;
         }
-        try {
-            Object result = handlerMapping.getMethod().invoke(handlerMapping.getController(),paramValues);
-            if(result == null || result instanceof Void ){return null;}
-            if(handlerMapping.getMethod().getReturnType() == GFModelAndView.class){
-                GFModelAndView modelAndView = (GFModelAndView)result;
-                return modelAndView;
-            }
+        Object result = handlerMapping.getMethod().invoke(handlerMapping.getController(),paramValues);
+        if(result == null || result instanceof Void){ return null; }
 
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
+        boolean isModelAndView = handlerMapping.getMethod().getReturnType() == GFModelAndView.class;
+        if(isModelAndView){
+            return (GFModelAndView) result;
         }
         return null;
     }
+
 
     /**
      * 对参数的类型进行转换

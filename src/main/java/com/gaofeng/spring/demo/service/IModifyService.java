@@ -1,4 +1,4 @@
-package com.gaofeng.spring.demo.action.service;
+package com.gaofeng.spring.demo.service;
 
 /**
  * 增删改业务

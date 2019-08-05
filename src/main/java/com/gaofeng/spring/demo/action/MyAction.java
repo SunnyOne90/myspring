@@ -2,8 +2,8 @@ package com.gaofeng.spring.demo.action;
 
 
 
-import com.gaofeng.spring.demo.action.service.IModifyService;
-import com.gaofeng.spring.demo.action.service.IQueryService;
+import com.gaofeng.spring.demo.service.IModifyService;
+import com.gaofeng.spring.demo.service.IQueryService;
 import com.gaofeng.spring.formework.annotation.GFAutowired;
 import com.gaofeng.spring.formework.annotation.GFController;
 import com.gaofeng.spring.formework.annotation.GFRequestMapping;

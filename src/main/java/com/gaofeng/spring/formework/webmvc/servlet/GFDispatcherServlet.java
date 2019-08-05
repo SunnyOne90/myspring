@@ -74,7 +74,9 @@ public class GFDispatcherServlet extends HttpServlet {
         if(modelAndView == null)return;
         if(viewResolvers.isEmpty())return;
         for (GFViewResolver viewResolver : viewResolvers) {
+            //modelAndView.getViewName() 为异常中模板的500
             GFView view = viewResolver.resolveViewName(modelAndView.getViewName(),null);
+            //拿到参数向模板渲染
             view.render(modelAndView.getModel(),req,resp);
             return;
         }
@@ -88,8 +90,6 @@ public class GFDispatcherServlet extends HttpServlet {
      * @return
      */
     private GFHandlerMapping getHandler(HttpServletRequest req) {
-//        String urlPath  = req.getContextPath();//返回系统项目名称
-//        String uri = req.getRequestURI();//返回全路径
         String url = req.getRequestURI();;//返回全路径
         String contextPath = req.getContextPath();//返回系统项目名称
         url = url.replace(contextPath,"").replaceAll("/+","/");
@@ -142,11 +142,9 @@ public class GFDispatcherServlet extends HttpServlet {
         String templateRootPath = this.getClass().getClassLoader().getResource(templateRoot).getFile();
         File templateRootDir = new File(templateRootPath);
 
-        for (int i=0;i<templateRootDir.length();i++){
+        for (int i=0;i<templateRootDir.list().length;i++){
             this.viewResolvers.add(new GFViewResolver(templateRoot));
         }
-
-
     }
 
     private void initRequestToViewNameTranslator(GFApplicationContext context) {

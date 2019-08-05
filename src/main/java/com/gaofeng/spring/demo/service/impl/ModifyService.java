@@ -1,7 +1,7 @@
-package com.gaofeng.spring.demo.action.service.impl;
+package com.gaofeng.spring.demo.service.impl;
 
 
-import com.gaofeng.spring.demo.action.service.IModifyService;
+import com.gaofeng.spring.demo.service.IModifyService;
 import com.gaofeng.spring.formework.annotation.GFService;
 
 /**

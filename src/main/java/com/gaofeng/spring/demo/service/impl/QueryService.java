@@ -1,7 +1,7 @@
-package com.gaofeng.spring.demo.action.service.impl;
+package com.gaofeng.spring.demo.service.impl;
 
 
-import com.gaofeng.spring.demo.action.service.IQueryService;
+import com.gaofeng.spring.demo.service.IQueryService;
 import com.gaofeng.spring.formework.annotation.GFService;
 import lombok.extern.slf4j.Slf4j;
 
